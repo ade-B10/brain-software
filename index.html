@@ -1,1 +1,482 @@
-placeholder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain Software</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#1A1A1A;-webkit-font-smoothing:antialiased;line-height:1.6}
+
+/* HERO - compact */
+.hero{padding:24px 32px 14px;text-align:center;border-bottom:1px solid #eee}
+.b10-logo{display:inline-block;margin-bottom:6px;text-decoration:none}
+.b10-logo .b10-text{font-family:'Inter',sans-serif;font-size:22px;font-weight:900;color:#1A1A1A;letter-spacing:-0.5px;line-height:1}
+.b10-logo sup{font-size:13px;font-weight:900;vertical-align:super;position:relative;top:-1px}
+.b10-logo .b10-bar{display:block;width:22px;height:3px;background:#45AEEB;border-radius:2px;margin:-2px 0 0 auto}
+.hero h1{font-size:24px;font-weight:800;letter-spacing:-1px;color:#1A1A1A;margin-bottom:3px}
+.hero .sub{font-size:12px;color:#888;font-weight:400}
+.hero .sub em{color:#45AEEB;font-style:normal;font-weight:500}
+.stats-row{display:flex;justify-content:center;gap:28px;margin-top:8px}
+.stat .num{font-size:15px;font-weight:700;color:#1A1A1A}
+.stat .lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#aaa}
+
+/* CONTROLS */
+.controls{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid #eee;padding:10px 32px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.toggle-group{display:flex;background:#f5f5f5;border-radius:8px;overflow:hidden}
+.toggle-btn{padding:6px 18px;font-size:12px;font-weight:600;border:none;background:transparent;color:#999;cursor:pointer;transition:all 0.2s}
+.toggle-btn.active{background:#1A1A1A;color:#fff;border-radius:8px}
+.toggle-btn:hover:not(.active){color:#555}
+.search-box{background:#f5f5f5;border:1px solid #eee;border-radius:8px;padding:6px 14px;color:#1A1A1A;font-size:12px;font-family:inherit;width:220px;outline:none;transition:border-color 0.2s}
+.search-box:focus{border-color:#45AEEB}
+.search-box::placeholder{color:#bbb}
+
+/* CONTAINER */
+.container{max-width:1100px;margin:0 auto;padding:24px 32px 48px}
+
+/* TOPIC VIEW */
+.topic-section{margin-bottom:40px}
+.topic-header{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:8px}
+.topic-icon{font-size:14px}
+.quote-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+
+.quote-card{background:#fafafa;border:1px solid #eee;border-radius:10px;padding:20px;transition:all 0.2s;position:relative}
+.quote-card:hover{border-color:#ddd;box-shadow:0 4px 20px rgba(0,0,0,0.04);transform:translateY(-1px)}
+.quote-text{font-size:14px;line-height:1.7;color:#333;margin-bottom:14px;font-weight:400}
+.quote-footer{display:flex;align-items:center;gap:10px}
+.avatar{width:28px;height:28px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#f0f0f0}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.avatar-initials{width:28px;height:28px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#999;flex-shrink:0}
+.quote-author{font-size:12px;font-weight:600;color:#555}
+.quote-source{font-size:10px;color:#aaa;margin-top:1px}
+.quote-source a{color:#45AEEB;text-decoration:none;opacity:0.8}
+.quote-source a:hover{opacity:1;text-decoration:underline}
+
+/* FOUNDER VIEW */
+.founder-section{margin-bottom:40px}
+.founder-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #f0f0f0}
+.founder-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#f0f0f0}
+.founder-avatar img{width:100%;height:100%;object-fit:cover}
+.founder-avatar-initials{font-size:14px;font-weight:700;color:#999}
+.founder-info h3{font-size:16px;font-weight:700;color:#1A1A1A;letter-spacing:-0.3px}
+.founder-info .founder-meta{font-size:11px;color:#aaa}
+.founder-info .founder-meta a{color:#45AEEB;text-decoration:none}
+.founder-quotes-list{display:flex;flex-direction:column;gap:10px}
+.founder-quote-item{background:#fafafa;border:1px solid #eee;border-radius:10px;padding:16px 20px;font-size:14px;line-height:1.7;color:#333;transition:border-color 0.2s}
+.founder-quote-item:hover{border-color:#ddd}
+.founder-quote-item .topic-tag{display:inline-block;font-size:9px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:#999;background:#f0f0f0;padding:2px 7px;border-radius:3px;margin-top:8px}
+
+/* FOOTER */
+.page-footer{text-align:center;padding:32px;border-top:1px solid #eee;margin-top:32px}
+.page-footer .b10-logo{display:inline-block;margin-bottom:6px}
+.page-footer .fnote{font-size:11px;color:#bbb}
+.page-footer .fnote a{color:#45AEEB;text-decoration:none;opacity:0.6}
+.podcast-link{display:inline-block;margin-top:8px;font-size:11px;color:#aaa;text-decoration:none;transition:color 0.2s}
+.podcast-link:hover{color:#45AEEB}
+
+.no-results{text-align:center;padding:48px;color:#aaa;font-size:14px}
+.hidden{display:none!important}
+
+@media(max-width:640px){
+  .quote-grid{grid-template-columns:1fr}
+  .controls{padding:8px 16px}
+  .search-box{width:100%;order:10}
+  .container{padding:16px}
+  .stats-row{gap:20px}
+}
+
+.quote-card,.founder-quote-item{opacity:0;transform:translateY(8px);animation:fadeUp 0.35s ease forwards}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+.quote-grid .quote-card:nth-child(1){animation-delay:.02s}
+.quote-grid .quote-card:nth-child(2){animation-delay:.05s}
+.quote-grid .quote-card:nth-child(3){animation-delay:.08s}
+.quote-grid .quote-card:nth-child(4){animation-delay:.11s}
+.quote-grid .quote-card:nth-child(5){animation-delay:.14s}
+.quote-grid .quote-card:nth-child(6){animation-delay:.17s}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <a href="https://base10.vc" target="_blank" class="b10-logo"><span class="b10-text">Base<sup>10</sup></span><span class="b10-bar"></span></a>
+  <h1>Brain Software</h1>
+  <p class="sub">The best ideas from the greatest founders, investors, and thinkers. Curated by <em>Ade</em>.</p>
+  <div class="stats-row">
+    <div class="stat"><div class="num" id="qC">0</div><div class="lbl">Quotes</div></div>
+    <div class="stat"><div class="num" id="fC">0</div><div class="lbl">Minds</div></div>
+    <div class="stat"><div class="num" id="tC">0</div><div class="lbl">Topics</div></div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="toggle-group">
+    <button class="toggle-btn active" data-view="topic" onclick="switchView('topic')">By Topic</button>
+    <button class="toggle-btn" data-view="founder" onclick="switchView('founder')">By Founder</button>
+  </div>
+  <input type="text" class="search-box" placeholder="Search quotes, founders..." oninput="filterQuotes(this.value)">
+</div>
+
+<div class="container" id="content"></div>
+
+<div class="page-footer">
+  <a href="https://base10.vc" target="_blank" class="b10-logo" style="opacity:0.3"><span class="b10-text" style="font-size:16px">Base<sup style="font-size:10px">10</sup></span><span class="b10-bar" style="width:16px;height:2px"></span></a>
+  <div class="fnote">Curated by Adeyemi Ajao | <a href="https://base10.vc" target="_blank">base10.vc</a></div>
+  <a class="podcast-link" href="https://www.founderspodcast.com/" target="_blank">Inspired by the Founders Podcast by David Senra</a>
+</div>
+
+<script>
+const IMGS={"Steve Jobs":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg/200px-Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg",
+"Napoleon":"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg/200px-Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg",
+"Coco Chanel":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Coco_Chanel_1920.jpg/200px-Coco_Chanel_1920.jpg",
+"Jeff Bezos":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg/200px-Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg",
+"Warren Buffett":"https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Warren_Buffett_KU_Visit.jpg/200px-Warren_Buffett_KU_Visit.jpg",
+"Charlie Munger":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Charlie_Munger_%28cropped%29.jpg/200px-Charlie_Munger_%28cropped%29.jpg",
+"David Ogilvy":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/David_Ogilvy_%28businessman%29.jpg/200px-David_Ogilvy_%28businessman%29.jpg",
+"Walt Disney":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Walt_Disney_1946.JPG/200px-Walt_Disney_1946.JPG",
+"Albert Einstein":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Einstein_1921_by_F_Schmutzer_-_restoration.jpg/200px-Einstein_1921_by_F_Schmutzer_-_restoration.jpg",
+"Elon Musk":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Elon_Musk_%2854816836217%29_%28cropped_2%29_%28b%29.jpg/200px-Elon_Musk_%2854816836217%29_%28cropped_2%29_%28b%29.jpg",
+"Naval Ravikant":"https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Naval_Ravikant_%28cropped%29.jpg/200px-Naval_Ravikant_%28cropped%29.jpg",
+"Peter Thiel":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Peter_Thiel_by_Gage_Skidmore.jpg/200px-Peter_Thiel_by_Gage_Skidmore.jpg",
+"Arnold Schwarzenegger":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Arnold_Schwarzenegger_2019_%28rotated-cropped%29.jpg/200px-Arnold_Schwarzenegger_2019_%28rotated-cropped%29.jpg",
+"Ernest Shackleton":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Ernest_Shackleton_before_1909.jpg/200px-Ernest_Shackleton_before_1909.jpg",
+"Bill Walsh":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Coach_Bill_Walsh.jpg/200px-Coach_Bill_Walsh.jpg",
+"Bernard Arnault":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Bernard_Arnault_%283%29_-_2017_%28cropped%29.jpg/200px-Bernard_Arnault_%283%29_-_2017_%28cropped%29.jpg",
+"Ben Franklin":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Joseph_Siffrein_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg/200px-Joseph_Siffrein_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg",
+"Henry Ford":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Henry_ford_1919.jpg/200px-Henry_ford_1919.jpg",
+"Carl Sagan":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Carl_Sagan_Planetary_Society.JPG/200px-Carl_Sagan_Planetary_Society.JPG",
+"Barack Obama":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/200px-President_Barack_Obama.jpg",
+"Aristotle":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Aristotle_Altemps_Inv8575.jpg/200px-Aristotle_Altemps_Inv8575.jpg",
+"Antoine de Saint-Exupery":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Saint-Exup%C3%A9ry_par_Agence_France-Presse.jpg/200px-Saint-Exup%C3%A9ry_par_Agence_France-Presse.jpg",
+"Isadore Sharp":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Isadore_Sharp%2C_Dan_Hadani_collection_%28990048211210205171%29_%28cropped%29.jpg/200px-Isadore_Sharp%2C_Dan_Hadani_collection_%28990048211210205171%29_%28cropped%29.jpg",
+"Ingvar Kamprad":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ingvar_Kamprad_Haparanda_June_2010.jpg/200px-Ingvar_Kamprad_Haparanda_June_2010.jpg",
+"Brad Jacobs":"https://upload.wikimedia.org/wikipedia/en/thumb/5/54/Brad_Jacobs_XPO%2C_GXO%2C_RXO_chairman.jpg/200px-Brad_Jacobs_XPO%2C_GXO%2C_RXO_chairman.jpg",
+"Mark Spitznagel":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Hedge_Fund_Manager_Mark_Spitznagel.jpg/200px-Hedge_Fund_Manager_Mark_Spitznagel.jpg",
+"Yvon Chouinard":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Yvon_Chouinard_by_Tom_Frost.jpg/200px-Yvon_Chouinard_by_Tom_Frost.jpg",
+"Hetty Green":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Hetty_Green_cph.3a42973.jpg/200px-Hetty_Green_cph.3a42973.jpg",
+"Daniel Ludwig":"https://upload.wikimedia.org/wikipedia/en/thumb/5/51/Daniel_K._Ludwig.jpg/200px-Daniel_K._Ludwig.jpg",
+"Christopher Nolan":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/ChrisNolanBFI150224_%2810_of_12%29_%2853532289710%29_%28cropped2%29.jpg/200px-ChrisNolanBFI150224_%2810_of_12%29_%2853532289710%29_%28cropped2%29.jpg",
+"James Cameron":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/James_Cameron_by_Gage_Skidmore.jpg/200px-James_Cameron_by_Gage_Skidmore.jpg",
+"Marc Andreessen":"https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Marc_Andreessen-9_%28cropped%29.jpg/200px-Marc_Andreessen-9_%28cropped%29.jpg",
+"Richard Branson":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Richard_Branson_Addresses_the_Our_Ocean_Conference_2015_in_Valpara%C3%ADso_%2821783214958%29_%28cropped%29.jpg/200px-Richard_Branson_Addresses_the_Our_Ocean_Conference_2015_in_Valpara%C3%ADso_%2821783214958%29_%28cropped%29.jpg",
+"Paul Graham":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Paulgraham_240x320.jpg/200px-Paulgraham_240x320.jpg",
+"Sam Walton":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Sam_Walton_%281992_2%29.jpg/200px-Sam_Walton_%281992_2%29.jpg",
+"Michael Bloomberg":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Michael_Bloomberg_2005.jpg/200px-Michael_Bloomberg_2005.jpg",
+"Estee Lauder":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Estee_Lauder_NYWTS.jpg/200px-Estee_Lauder_NYWTS.jpg",
+"Thomas Edison":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Thomas_Edison2.jpg/200px-Thomas_Edison2.jpg",
+"Ed Catmull":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Ed_Catmull_at_Web_Summit_2015_%28cropped%29.jpg/200px-Ed_Catmull_at_Web_Summit_2015_%28cropped%29.jpg",
+"Edwin Land":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Edwin_H._Land%2C_founder%2C_Polaroid_%28cropped%29.jpg/200px-Edwin_H._Land%2C_founder%2C_Polaroid_%28cropped%29.jpg",
+"Robert Caro":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Robert_caro_2012.jpg/200px-Robert_caro_2012.jpg",
+"Stephen King":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Stephen_King_at_the_2024_Toronto_International_Film_Festival_2_%28cropped%29.jpg/200px-Stephen_King_at_the_2024_Toronto_International_Film_Festival_2_%28cropped%29.jpg",
+"Richard Feynman":"https://upload.wikimedia.org/wikipedia/en/thumb/4/42/Richard_Feynman_Nobel.jpg/200px-Richard_Feynman_Nobel.jpg",
+"Jony Ive":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Jonathan_Ive_%28OTRS%29.jpg/200px-Jonathan_Ive_%28OTRS%29.jpg",
+"Winston Churchill":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Sir_Winston_Churchill_-_19086236948_%28restored%29.jpg/200px-Sir_Winston_Churchill_-_19086236948_%28restored%29.jpg",
+"Sam Zell":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Zell_face_%28cropped%29.jpg/200px-Zell_face_%28cropped%29.jpg",
+"Hans Zimmer":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Hans-Zimmer-profile.jpg/200px-Hans-Zimmer-profile.jpg",
+"MrBeast":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/MrBeast_2023_%28cropped%29.jpg/200px-MrBeast_2023_%28cropped%29.jpg",
+"Bobby Knight":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Bob-Knight-Nov-21-07-1.jpg/200px-Bob-Knight-Nov-21-07-1.jpg",
+"Nolan Bushnell":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Nolan_Bushnell_2013_%283x4_cropped%29.jpg/200px-Nolan_Bushnell_2013_%283x4_cropped%29.jpg",
+"Capablanca":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Jos%C3%A9_Ra%C3%BAl_Capablanca_1931.jpg/200px-Jos%C3%A9_Ra%C3%BAl_Capablanca_1931.jpg",
+"Helmuth von Moltke":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Portrait_of_Helmuth_von_Moltke_the_Elder_%28by_Carl_G%C3%BCnther%29_-_BNF_Gallica_%28cropped%29.jpg/200px-Portrait_of_Helmuth_von_Moltke_the_Elder_%28by_Carl_G%C3%BCnther%29_-_BNF_Gallica_%28cropped%29.jpg",
+"Peter Drucker":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Drucker5789.jpg/200px-Drucker5789.jpg",
+"Gordon Moore":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Gordon_Moore_1978_%28cropped%29.png/200px-Gordon_Moore_1978_%28cropped%29.png",
+"Larry Ellison":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Larry_Ellison_picture.png/200px-Larry_Ellison_picture.png",
+"Marco Tardelli":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Marco_Tardelli_-_Lucca_Comics_%26_Games_2016.jpg/200px-Marco_Tardelli_-_Lucca_Comics_%26_Games_2016.jpg",
+"Dieter Rams":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Designer-Dieter_Rams.jpg/200px-Designer-Dieter_Rams.jpg",
+"Louis Sullivan / Dieter Rams":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Designer-Dieter_Rams.jpg/200px-Designer-Dieter_Rams.jpg",
+"Scott Galloway":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Scott_Galloway_%2851933097365%29_%28cropped%29.jpg/200px-Scott_Galloway_%2851933097365%29_%28cropped%29.jpg",
+"LBJ":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Lyndon_B._Johnson%2C_photo_portrait%2C_color_%283x4_cropped%29%283%29.jpg/200px-Lyndon_B._Johnson%2C_photo_portrait%2C_color_%283x4_cropped%29%283%29.jpg",
+"Michael Jordan":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Michael_Jordan_in_2014.jpg/200px-Michael_Jordan_in_2014.jpg",
+"Charles Sheffield":"https://upload.wikimedia.org/wikipedia/en/thumb/e/e1/Writer_DrCharlesSheffield.jpg/200px-Writer_DrCharlesSheffield.jpg",
+"Warren Ellis":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Warren_Ellis_by_Gage_Skidmore.jpg/200px-Warren_Ellis_by_Gage_Skidmore.jpg",
+"Truman Capote":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Truman_Capote_by_Jack_Mitchell.jpg/200px-Truman_Capote_by_Jack_Mitchell.jpg",
+"Jorge Paulo Lemann":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Jorge_Paulo_Lemann_em_fevereiro_de_2012.png/200px-Jorge_Paulo_Lemann_em_fevereiro_de_2012.png",
+"Dee Hock":"https://upload.wikimedia.org/wikipedia/en/thumb/a/a8/Dee_Hock_%282018%29.jpg/200px-Dee_Hock_%282018%29.jpg",
+"Sid Meier":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Sid_Meier_-_Game_Developers_Conference_2010_-_Day_4_%283%29.jpg/200px-Sid_Meier_-_Game_Developers_Conference_2010_-_Day_4_%283%29.jpg",
+"Bob Noyce":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Robert_Noyce_with_Motherboard_1959.png/200px-Robert_Noyce_with_Motherboard_1959.png",
+"Jay Pritzker":"https://upload.wikimedia.org/wikipedia/en/thumb/9/9d/Jay_Pritzker.jpg/200px-Jay_Pritzker.jpg",
+"Howard Hughes Sr.":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Howard_Hughes_1938.jpg/200px-Howard_Hughes_1938.jpg",
+"Alexander Graham Bell":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Alexander_Graham_Bell_1895_NPG_77_363.jpg/200px-Alexander_Graham_Bell_1895_NPG_77_363.jpg",
+"Mary Kay Ash":"https://upload.wikimedia.org/wikipedia/en/thumb/6/6e/Mary_Kay_Ash.gif/200px-Mary_Kay_Ash.gif",
+"Louis B. Mayer":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Louis_B_Mayer_cropped.jpg/200px-Louis_B_Mayer_cropped.jpg",
+"La Rochefoucauld":"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Fran%C3%A7ois_de_La_Rochefoucauld.jpg/200px-Fran%C3%A7ois_de_La_Rochefoucauld.jpg",
+"Larry Gagosian":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/WTM3_Buddy_Crew_0030.jpg/200px-WTM3_Buddy_Crew_0030.jpg",
+"Vannevar Bush":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Vannevar_Bush_portrait.jpg/200px-Vannevar_Bush_portrait.jpg",
+"Blaise Pascal":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Blaise_Pascal_Versailles.JPG/200px-Blaise_Pascal_Versailles.JPG",
+"Confucius":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Konfuzius-1770.jpg/200px-Konfuzius-1770.jpg",
+"Ed Thorp":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Ed_Thorp_in_2019.jpg/200px-Ed_Thorp_in_2019.jpg",
+"Notorious B.I.G.":"https://upload.wikimedia.org/wikipedia/en/thumb/5/51/The_Notorious_B.I.G._in_1991.png/200px-The_Notorious_B.I.G._in_1991.png",
+"George Bernard Shaw":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/George_Bernard_Shaw_1936.jpg/200px-George_Bernard_Shaw_1936.jpg",
+"Les Schwab":"https://upload.wikimedia.org/wikipedia/en/thumb/c/cd/Les_Schwab.jpg/200px-Les_Schwab.jpg",
+"Nick Sleep":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Nick_Sleep_%28investor%29.jpg/200px-Nick_Sleep_%28investor%29.jpg"};
+const Q=[
+// ===== EXCELLENCE & STANDARDS =====
+{t:"Genius has the fewest moving parts.",a:"Charlie Munger",topic:"Excellence & Standards",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Charlie_Munger_%28cropped%29.jpg/250px-Charlie_Munger_%28cropped%29.jpg"},
+{t:"We are what we repeatedly do. Excellence then is not an act but a habit.",a:"Aristotle",topic:"Excellence & Standards",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Aristotle_Altemps_Inv8575.jpg/440px-Aristotle_Altemps_Inv8575.jpg"},
+{t:"I am just more stubborn about excellence.",a:"Steve Jobs",topic:"Excellence & Standards",ep:"https://www.founderspodcast.com/",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg/440px-Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg"},
+{t:"It is immoral to play at earning one's living.",a:"Coco Chanel",topic:"Excellence & Standards",ep:"https://www.founderspodcast.com/episodes/coco-chanel-064",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Coco_Chanel%2C_1920.jpg/440px-Coco_Chanel%2C_1920.jpg"},
+{t:"The pursuit of detail is the religion of success.",a:"Napoleon",topic:"Excellence & Standards",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg/440px-Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg"},
+{t:"If we lose the detail we lose everything.",a:"Walt Disney",topic:"Excellence & Standards",ep:"https://www.founderspodcast.com/episodes/walt-disney-002",img:"https://upload.wikimedia.org/wikipedia/commons/d/df/Walt_Disney_1946.JPG"},
+{t:"Excellence is the capacity to take pain.",a:"Isadore Sharp",topic:"Excellence & Standards",ep:"https://www.founderspodcast.com/episodes/four-seasons-184",meta:"Four Seasons founder",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Isadore_Sharp%2C_Dan_Hadani_collection_%28990048211210205171%29_%28cropped%29.jpg/250px-Isadore_Sharp%2C_Dan_Hadani_collection_%28990048211210205171%29_%28cropped%29.jpg"},
+{t:"Be pleased but not satisfied.",a:"",topic:"Excellence & Standards"},
+{t:"Perfection is achieved not when there is nothing to add but when there is nothing to take away.",a:"Antoine de Saint-Exupery",topic:"Excellence & Standards",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Saint-Exup%C3%A9ry_par_Agence_France-Presse.jpg/440px-Saint-Exup%C3%A9ry_par_Agence_France-Presse.jpg"},
+{t:"Everything should be made as simple as possible but not simpler.",a:"Albert Einstein",topic:"Excellence & Standards",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Einstein_1921_by_F_Schmutzer_-_restoration.jpg/440px-Einstein_1921_by_F_Schmutzer_-_restoration.jpg"},
+{t:"What you have just shown me is not up to your usual high standard. Please take another crack at it.",a:"David Ogilvy",topic:"Excellence & Standards",ep:"https://www.founderspodcast.com/episodes/ogilvy-082",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/David_Ogilvy_%28businessman%29.jpg/440px-David_Ogilvy_%28businessman%29.jpg"},
+{t:"Mediocrity is always invisible until passion shows up and exposes it.",a:"",topic:"Excellence & Standards"},
+{t:"Narrow your product but up your intensity.",a:"Steve Jobs",topic:"Excellence & Standards",ep:"https://www.founderspodcast.com/",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg/440px-Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg"},
+{t:"Don't you think you owe it to yourself and to me to make it better?",a:"Steve Jobs",topic:"Excellence & Standards",ep:"https://www.founderspodcast.com/",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg/440px-Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg"},
+{t:"If anything is worth doing it is worth doing to excess.",a:"Edwin Land",topic:"Excellence & Standards",ep:"https://www.founderspodcast.com/episodes/edwin-land-040",meta:"Polaroid founder",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Edwin_H._Land%2C_founder%2C_Polaroid_%28cropped%29.jpg/250px-Edwin_H._Land%2C_founder%2C_Polaroid_%28cropped%29.jpg"},
+{t:"Expensive solutions to any given problem are generally the result of mediocrity.",a:"Ingvar Kamprad",topic:"Excellence & Standards",ep:"https://www.founderspodcast.com/",meta:"IKEA founder",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ingvar_Kamprad_Haparanda_June_2010.jpg/250px-Ingvar_Kamprad_Haparanda_June_2010.jpg"},
+{t:"Only those who are asleep make no mistakes.",a:"Ingvar Kamprad",topic:"Excellence & Standards",ep:"https://www.founderspodcast.com/",meta:"IKEA founder",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ingvar_Kamprad_Haparanda_June_2010.jpg/250px-Ingvar_Kamprad_Haparanda_June_2010.jpg"},
+
+// ===== MINDSET & CHARACTER =====
+{t:"Be a formidable individual.",a:"",topic:"Mindset & Character"},
+{t:"Champions behave like champions before they are champions.",a:"Bill Walsh",topic:"Mindset & Character",ep:"https://www.founderspodcast.com/episodes/bill-walsh-106",meta:"The Score Takes Care of Itself",img:"https://upload.wikimedia.org/wikipedia/commons/3/35/Coach_Bill_Walsh.jpg"},
+{t:"The world doesn't happen to high agency individuals. High agency individuals happen to the world.",a:"George Bernard Shaw",topic:"Mindset & Character"},
+{t:"Chips on shoulders put chips in pockets.",a:"Josh Wolfe",topic:"Mindset & Character",meta:"Lux Capital"},
+{t:"By endurance we conquer.",a:"Ernest Shackleton",topic:"Mindset & Character",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Ernest_Shackleton_before_1909.jpg/440px-Ernest_Shackleton_before_1909.jpg"},
+{t:"Tough times don't last but tough people do.",a:"Daniel Ludwig",topic:"Mindset & Character",ep:"https://www.founderspodcast.com/episodes/daniel-ludwig-068",meta:"The Invisible Billionaire",img:"https://upload.wikimedia.org/wikipedia/en/thumb/5/51/Daniel_K._Ludwig.jpg/250px-Daniel_K._Ludwig.jpg"},
+{t:"If you do everything you will win.",a:"LBJ",topic:"Mindset & Character",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Lyndon_B._Johnson%2C_photo_portrait%2C_color_%283x4_cropped%29%283%29.jpg/250px-Lyndon_B._Johnson%2C_photo_portrait%2C_color_%283x4_cropped%29%283%29.jpg"},
+{t:"Risk tolerance: don't want to fail but not afraid of it.",a:"Elon Musk",topic:"Mindset & Character",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Elon_Musk_%2854816836217%29_%28cropped_2%29_%28b%29.jpg/250px-Elon_Musk_%2854816836217%29_%28cropped_2%29_%28b%29.jpg"},
+{t:"It is possible for ordinary people to become extraordinary.",a:"Elon Musk",topic:"Mindset & Character",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Elon_Musk_%2854816836217%29_%28cropped_2%29_%28b%29.jpg/250px-Elon_Musk_%2854816836217%29_%28cropped_2%29_%28b%29.jpg"},
+{t:"A lot of people have potential. What separates the champion from the 2nd best or the loser is the psychological advantage.",a:"Arnold Schwarzenegger",topic:"Mindset & Character",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Arnold_Schwarzenegger_2019_%28rotated-cropped%29.jpg/250px-Arnold_Schwarzenegger_2019_%28rotated-cropped%29.jpg"},
+{t:"Everybody has the will to win. People don't have the will to practice.",a:"Bobby Knight",topic:"Mindset & Character",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Bob-Knight-Nov-21-07-1.jpg/250px-Bob-Knight-Nov-21-07-1.jpg"},
+{t:"Until you succeed you never relax. Until you die you never give up.",a:"Charles Sheffield",topic:"Mindset & Character",img:"https://upload.wikimedia.org/wikipedia/en/thumb/e/e1/Writer_DrCharlesSheffield.jpg/250px-Writer_DrCharlesSheffield.jpg"},
+{t:"Optimize the ratio of consistency to intensity.",a:"",topic:"Mindset & Character"},
+{t:"You need to have a big ego to start a company but you need to know how to hide it.",a:"Sam Walton",topic:"Mindset & Character",ep:"https://www.founderspodcast.com/episodes/sam-walton-006",meta:"Made In America",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Sam_Walton_%281992_2%29.jpg/250px-Sam_Walton_%281992_2%29.jpg"},
+{t:"What do I call the place beyond pain, beyond loss and beyond sacrifice? Commitment.",a:"Hickman",topic:"Mindset & Character"},
+{t:"Self-reflection makes you lose your edge.",a:"Larry Gagosian",topic:"Mindset & Character",img:"https://upload.wikimedia.org/wikipedia/commons/3/30/WTM3_Buddy_Crew_0030.jpg"},
+{t:"Like an aging athlete I might not run as fast... but I know what I am doing and I am fearless.",a:"Barack Obama",topic:"Mindset & Character",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/250px-President_Barack_Obama.jpg"},
+{t:"The driving force of failure and fear.",a:"Elon Musk",topic:"Mindset & Character",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Elon_Musk_%2854816836217%29_%28cropped_2%29_%28b%29.jpg/250px-Elon_Musk_%2854816836217%29_%28cropped_2%29_%28b%29.jpg"},
+
+// ===== ENTREPRENEURSHIP & FOUNDERS =====
+{t:"Relentless determination = Entrepreneurship.",a:"Paul Graham",topic:"Entrepreneurship & Founders",meta:"Y Combinator",img:"https://upload.wikimedia.org/wikipedia/commons/e/e3/Paulgraham_240x320.jpg"},
+{t:"People think entrepreneurship is about money. It is not, it is about control. At what point in your life did you feel the need to be in control?",a:"",topic:"Entrepreneurship & Founders"},
+{t:"The belief system of the founder is the language of the company.",a:"",topic:"Entrepreneurship & Founders"},
+{t:"Founder is the guardian of the company's soul.",a:"David Senra",topic:"Entrepreneurship & Founders",ep:"https://www.founderspodcast.com/",meta:"Founders Podcast"},
+{t:"Founders don't succeed because they are perfect but despite all their imperfections.",a:"David Senra",topic:"Entrepreneurship & Founders",ep:"https://www.founderspodcast.com/"},
+{t:"A business is just an idea that will make someone's life better.",a:"Richard Branson",topic:"Entrepreneurship & Founders",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Richard_Branson_Addresses_the_Our_Ocean_Conference_2015_in_Valpara%C3%ADso_%2821783214958%29_%28cropped%29.jpg/250px-Richard_Branson_Addresses_the_Our_Ocean_Conference_2015_in_Valpara%C3%ADso_%2821783214958%29_%28cropped%29.jpg"},
+{t:"If you want to understand the entrepreneur, study the juvenile delinquent. The delinquent is saying with his actions 'this sucks, I am going to do my own thing.'",a:"",topic:"Entrepreneurship & Founders"},
+{t:"The difference between startups and cults is that startups are fanatically right about something and cults fanatically wrong.",a:"Peter Thiel",topic:"Entrepreneurship & Founders",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Peter_Thiel_by_Gage_Skidmore.jpg/250px-Peter_Thiel_by_Gage_Skidmore.jpg"},
+{t:"I am a reflection of what I do.",a:"Steve Jobs",topic:"Entrepreneurship & Founders",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg/440px-Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg"},
+{t:"What do you do when you do something wonderful? Wake up and do something wonderful again.",a:"Steve Jobs",topic:"Entrepreneurship & Founders",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg/440px-Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg"},
+{t:"I never set out for anything that I don't conquer.",a:"Hetty Green",topic:"Entrepreneurship & Founders",ep:"https://www.founderspodcast.com/episodes/hetty-green-103",meta:"Richest woman in America",img:"https://upload.wikimedia.org/wikipedia/commons/e/e4/Hetty_Green_cph.3a42973.jpg"},
+{t:"People admire the work. The founder gets confused and thinks they admire them without having to do the work.",a:"",topic:"Entrepreneurship & Founders"},
+{t:"I had this scream inside me since I was born and I am letting it out today.",a:"Marco Tardelli",topic:"Entrepreneurship & Founders",meta:"1982 World Cup Final",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Marco_Tardelli_-_Lucca_Comics_%26_Games_2016.jpg/250px-Marco_Tardelli_-_Lucca_Comics_%26_Games_2016.jpg"},
+{t:"Weird thing about taking VC funding is you never see the counterfactual on growth.",a:"",topic:"Entrepreneurship & Founders"},
+{t:"Technology is a new way of doing things.",a:"Peter Thiel",topic:"Entrepreneurship & Founders",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Peter_Thiel_by_Gage_Skidmore.jpg/250px-Peter_Thiel_by_Gage_Skidmore.jpg"},
+
+// ===== STRATEGY & COMPETITION =====
+{t:"Be like conifer tree: avoid direct competition and take the roundabout path of short-term sidestep for long-term win.",a:"Mark Spitznagel",topic:"Strategy & Competition",ep:"https://www.founderspodcast.com/episodes/dao-of-capital-070",meta:"The Dao of Capital",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Hedge_Fund_Manager_Mark_Spitznagel.jpg/250px-Hedge_Fund_Manager_Mark_Spitznagel.jpg"},
+{t:"It is not about the tortoise and the hare. It is about the tortoise turning into the hare.",a:"Mark Spitznagel",topic:"Strategy & Competition",ep:"https://www.founderspodcast.com/episodes/dao-of-capital-070",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Hedge_Fund_Manager_Mark_Spitznagel.jpg/250px-Hedge_Fund_Manager_Mark_Spitznagel.jpg"},
+{t:"Invent your own game so you can always win.",a:"Yvon Chouinard",topic:"Strategy & Competition",ep:"https://www.founderspodcast.com/episodes/yvon-chouinard-297",meta:"Patagonia founder",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Yvon_Chouinard_by_Tom_Frost.jpg/250px-Yvon_Chouinard_by_Tom_Frost.jpg"},
+{t:"How do you beat Bobby Fischer? You play him at any game but chess.",a:"Warren Buffett",topic:"Strategy & Competition",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Warren_Buffett_KU_Visit.jpg/440px-Warren_Buffett_KU_Visit.jpg"},
+{t:"Differentiate. Don't be the first, be the only.",a:"David Ogilvy",topic:"Strategy & Competition",ep:"https://www.founderspodcast.com/episodes/ogilvy-082",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/David_Ogilvy_%28businessman%29.jpg/440px-David_Ogilvy_%28businessman%29.jpg"},
+{t:"I run towards what is difficult simply because there is less competition there, so I have a tactical advantage.",a:"James Cameron",topic:"Strategy & Competition",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/James_Cameron_at_53rd_Saturn_Awards_2026-01.jpg/250px-James_Cameron_at_53rd_Saturn_Awards_2026-01.jpg"},
+{t:"No one can compete with you in being you. Escape competition through authenticity.",a:"Naval Ravikant",topic:"Strategy & Competition",img:"https://upload.wikimedia.org/wikipedia/commons/5/55/Naval_Ravikant_%28cropped%29.jpg"},
+{t:"Focus simplifies. Those expeditions that sacrificed speed to prepare for every eventuality were the ones that perished.",a:"Ernest Shackleton",topic:"Strategy & Competition",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Ernest_Shackleton_before_1909.jpg/440px-Ernest_Shackleton_before_1909.jpg"},
+{t:"No plan survives contact with the enemy.",a:"Helmuth von Moltke",topic:"Strategy & Competition",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Portrait_of_Helmuth_von_Moltke_the_Elder_%28by_Carl_G%C3%BCnther%29_-_BNF_Gallica_%28cropped%29.jpg/250px-Portrait_of_Helmuth_von_Moltke_the_Elder_%28by_Carl_G%C3%BCnther%29_-_BNF_Gallica_%28cropped%29.jpg"},
+{t:"Don't make a rigid plan, optimize for flexibility. Central planning didn't work for Stalin or Mao and it doesn't work for entrepreneurs either.",a:"Michael Bloomberg",topic:"Strategy & Competition",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Michael_Bloomberg_2005.jpg/250px-Michael_Bloomberg_2005.jpg"},
+{t:"Working cheaper and faster than the studio system encourages you to do is my way of maintaining control.",a:"Christopher Nolan",topic:"Strategy & Competition",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/ChrisNolanBFI150224_%2810_of_12%29_%2853532289710%29_%28cropped2%29.jpg/250px-ChrisNolanBFI150224_%2810_of_12%29_%2853532289710%29_%28cropped2%29.jpg"},
+{t:"Don't copy the what, copy the how.",a:"Naval Ravikant",topic:"Strategy & Competition",meta:"Bezos and Kindle copying iTunes + iPod",img:"https://upload.wikimedia.org/wikipedia/commons/5/55/Naval_Ravikant_%28cropped%29.jpg"},
+{t:"The world is a very malleable place. If you go after what you want with maximum energy, it will often reconfigure itself around you.",a:"Marc Andreessen",topic:"Strategy & Competition",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Marc_Andreessen-9_%28cropped%29.jpg/250px-Marc_Andreessen-9_%28cropped%29.jpg"},
+{t:"Opportunities exist on the frontier where most men dare not venture. The further the frontier, the greater the opportunity.",a:"Daniel Ludwig",topic:"Strategy & Competition",ep:"https://www.founderspodcast.com/episodes/daniel-ludwig-068",img:"https://upload.wikimedia.org/wikipedia/en/thumb/5/51/Daniel_K._Ludwig.jpg/250px-Daniel_K._Ludwig.jpg"},
+{t:"10 people who yell make more noise than 10,000 who keep silence.",a:"Napoleon",topic:"Strategy & Competition",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg/440px-Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg"},
+{t:"The strength of the army is the product of the mass times the velocity.",a:"Napoleon",topic:"Strategy & Competition",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg/440px-Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg"},
+{t:"To see if something is truly important don't adjust it by 5%: either double it or cut it in half and see the effect.",a:"Sid Meier",topic:"Strategy & Competition",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Sid_Meier_-_Game_Developers_Conference_2010_-_Day_4_%283%29.jpg/250px-Sid_Meier_-_Game_Developers_Conference_2010_-_Day_4_%283%29.jpg"},
+
+// ===== INVESTING & BUSINESS =====
+{t:"Winning is a habit.",a:"Larry Ellison",topic:"Investing & Business",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Larry_Ellison_picture.png/250px-Larry_Ellison_picture.png"},
+{t:"Business is problems. So rearrange your mind to enjoy them and see them as opportunities.",a:"Brad Jacobs",topic:"Investing & Business",ep:"https://www.founderspodcast.com/episodes/brad-jacobs-335",img:"https://upload.wikimedia.org/wikipedia/en/thumb/5/54/Brad_Jacobs_XPO%2C_GXO%2C_RXO_chairman.jpg/250px-Brad_Jacobs_XPO%2C_GXO%2C_RXO_chairman.jpg"},
+{t:"See the world for what it is, not what you want it to be.",a:"Brad Jacobs",topic:"Investing & Business",ep:"https://www.founderspodcast.com/episodes/brad-jacobs-335",img:"https://upload.wikimedia.org/wikipedia/en/thumb/5/54/Brad_Jacobs_XPO%2C_GXO%2C_RXO_chairman.jpg/250px-Brad_Jacobs_XPO%2C_GXO%2C_RXO_chairman.jpg"},
+{t:"If you lose money for the firm I am understanding, but if you lose reputation I am unwavering.",a:"Warren Buffett",topic:"Investing & Business",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Warren_Buffett_KU_Visit.jpg/440px-Warren_Buffett_KU_Visit.jpg"},
+{t:"Forget about buying fair businesses at wonderful prices. Buy wonderful businesses at fair prices.",a:"Charlie Munger",topic:"Investing & Business",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Charlie_Munger_%28cropped%29.jpg/250px-Charlie_Munger_%28cropped%29.jpg"},
+{t:"The best investors are founders who never sold. Every day Buffett didn't sell was a decision.",a:"Nick Sleep",topic:"Investing & Business",ep:"https://www.founderspodcast.com/episodes/nick-sleep-364",meta:"Nomad Investment Partnership"},
+{t:"I don't spend any time studying other investors. I spend all my time studying great businesses.",a:"Nick Sleep",topic:"Investing & Business",ep:"https://www.founderspodcast.com/episodes/nick-sleep-364"},
+{t:"Rational people don't risk what they have and need for what they don't have and don't need.",a:"Warren Buffett",topic:"Investing & Business",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Warren_Buffett_KU_Visit.jpg/440px-Warren_Buffett_KU_Visit.jpg"},
+{t:"Luxury goods make luxury profit margins.",a:"Bernard Arnault",topic:"Investing & Business",ep:"https://www.founderspodcast.com/episodes/bernard-arnault-296",meta:"Software margins on physical goods",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Bernard_Arnault_%283%29_-_2017_%28cropped%29.jpg/250px-Bernard_Arnault_%283%29_-_2017_%28cropped%29.jpg"},
+{t:"If I do this, what do I want to happen? If I do this, what do I think will happen?",a:"Ed Thorp",topic:"Investing & Business",ep:"https://www.founderspodcast.com/episodes/ed-thorp-093"},
+{t:"Find and nurture the intelligent fanatic.",a:"Ed Thorp",topic:"Investing & Business",ep:"https://www.founderspodcast.com/episodes/ed-thorp-093"},
+{t:"Highly automated, lean and profitable operation is the future of work.",a:"Ed Thorp",topic:"Investing & Business",ep:"https://www.founderspodcast.com/episodes/ed-thorp-093"},
+{t:"Extreme patience + extreme decisiveness. Three buckets of investing: yes, no, too hard to understand.",a:"",topic:"Investing & Business"},
+{t:"The most powerful words in investing are parents saying 'it will rot your brain!' That usually means dominant industry next decade.",a:"Josh Wolfe",topic:"Investing & Business",meta:"Lux Capital"},
+{t:"Technology democratizes consumption but consolidates production. The best person in the world gets to do it for everyone.",a:"Naval Ravikant",topic:"Investing & Business",img:"https://upload.wikimedia.org/wikipedia/commons/5/55/Naval_Ravikant_%28cropped%29.jpg"},
+{t:"The people that build the infrastructure are often not the ones that benefit financially from it.",a:"",topic:"Investing & Business",meta:"Iridium lesson"},
+{t:"We look around and see so much waste and room for improvement, what the Japanese call Muda. This is great news for our shareholders.",a:"Jeff Bezos",topic:"Investing & Business",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg/440px-Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg"},
+{t:"Expenses are like fingernails, you have to constantly trim them.",a:"Jorge Paulo Lemann",topic:"Investing & Business",meta:"3G Capital",img:"https://upload.wikimedia.org/wikipedia/commons/7/7e/Jorge_Paulo_Lemann_em_fevereiro_de_2012.png"},
+{t:"Business is problems and the best businesses are problem solving machines.",a:"",topic:"Investing & Business"},
+
+// ===== HIRING & TALENT =====
+{t:"Hire people that can think dialectically: the ability to view issues from multiple perspectives and arrive at the most economical reconciliation of seemingly contradictory information.",a:"Brad Jacobs",topic:"Hiring & Talent",ep:"https://www.founderspodcast.com/episodes/brad-jacobs-335",img:"https://upload.wikimedia.org/wikipedia/en/thumb/5/54/Brad_Jacobs_XPO%2C_GXO%2C_RXO_chairman.jpg/250px-Brad_Jacobs_XPO%2C_GXO%2C_RXO_chairman.jpg"},
+{t:"Talent is the best asset class.",a:"Graham Duncan",topic:"Hiring & Talent"},
+{t:"Pay peanuts and you get monkeys.",a:"David Ogilvy",topic:"Hiring & Talent",ep:"https://www.founderspodcast.com/episodes/ogilvy-082",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/David_Ogilvy_%28businessman%29.jpg/440px-David_Ogilvy_%28businessman%29.jpg"},
+{t:"Tolerate genius. It is most likely to be found among non-conformists which are difficult but lay golden eggs.",a:"David Ogilvy",topic:"Hiring & Talent",ep:"https://www.founderspodcast.com/episodes/ogilvy-082",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/David_Ogilvy_%28businessman%29.jpg/440px-David_Ogilvy_%28businessman%29.jpg"},
+{t:"A job with a lot of moving parts benefits from a mind with a lot of moving parts.",a:"Nolan Bushnell",topic:"Hiring & Talent",meta:"On reading habits in interviews",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Nolan_Bushnell_2013_%283x4_cropped%29.jpg/250px-Nolan_Bushnell_2013_%283x4_cropped%29.jpg"},
+{t:"The bar of hiring should be so good that if you applied again right now, you wouldn't get in.",a:"Jeff Bezos",topic:"Hiring & Talent",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg/440px-Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg"},
+{t:"You can hire mathematicians but they can't hire me. Develop skills you can't hire for.",a:"Thomas Edison",topic:"Hiring & Talent",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Thomas_Edison2.jpg/250px-Thomas_Edison2.jpg"},
+{t:"Find great work on the internet and cold reach out praising it.",a:"David Ogilvy",topic:"Hiring & Talent",ep:"https://www.founderspodcast.com/episodes/ogilvy-082",meta:"How to recruit",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/David_Ogilvy_%28businessman%29.jpg/440px-David_Ogilvy_%28businessman%29.jpg"},
+{t:"What instantly sets a man apart is his intelligence or talent, and they are balanced by their character or courage.",a:"Napoleon",topic:"Hiring & Talent",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg/440px-Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_at_the_Tuileries_-_Google_Art_Project.jpg"},
+{t:"Pay suppliers better than anyone else.",a:"Ingvar Kamprad",topic:"Hiring & Talent",meta:"IKEA lesson. SpaceX too.",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ingvar_Kamprad_Haparanda_June_2010.jpg/250px-Ingvar_Kamprad_Haparanda_June_2010.jpg"},
+{t:"Single most important role of the leader is to commit the entire organization to a common goal.",a:"",topic:"Hiring & Talent"},
+
+// ===== VISION & LONG-TERM THINKING =====
+{t:"2024 might have lower luxury spending but I am planning 2030.",a:"Bernard Arnault",topic:"Vision & Long-Term Thinking",ep:"https://www.founderspodcast.com/episodes/bernard-arnault-296",meta:"LVMH",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Bernard_Arnault_%283%29_-_2017_%28cropped%29.jpg/250px-Bernard_Arnault_%283%29_-_2017_%28cropped%29.jpg"},
+{t:"When people congratulate me for a quarter I think it was largely baked in 3 quarters ago and I am currently planning 3 quarters from now.",a:"Jeff Bezos",topic:"Vision & Long-Term Thinking",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg/440px-Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg"},
+{t:"You need to be stubborn on your vision but flexible on the details.",a:"Jeff Bezos",topic:"Vision & Long-Term Thinking",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg/440px-Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg"},
+{t:"Don't let the now destroy the forever.",a:"",topic:"Vision & Long-Term Thinking"},
+{t:"Be intolerant of slowness and have a long term view.",a:"",topic:"Vision & Long-Term Thinking"},
+{t:"Even exponential growth feels flat at the beginning.",a:"",topic:"Vision & Long-Term Thinking"},
+{t:"To begin you must first study the end. It is not the one who makes the first move who wins but the last man standing.",a:"Capablanca",topic:"Vision & Long-Term Thinking",meta:"Chess world champion",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Jos%C3%A9_Ra%C3%BAl_Capablanca_1931.jpg/250px-Jos%C3%A9_Ra%C3%BAl_Capablanca_1931.jpg"},
+{t:"It is earlier than we think.",a:"Vannevar Bush",topic:"Vision & Long-Term Thinking",ep:"https://www.founderspodcast.com/episodes/vannevar-bush-270"},
+{t:"At the beginning type one page with what the heart of the movie is. Then go film. Nothing will be as you want, the heart will help you find your way back.",a:"Christopher Nolan",topic:"Vision & Long-Term Thinking",meta:"Bezos does the same: start with a mock press release",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/ChrisNolanBFI150224_%2810_of_12%29_%2853532289710%29_%28cropped2%29.jpg/250px-ChrisNolanBFI150224_%2810_of_12%29_%2853532289710%29_%28cropped2%29.jpg"},
+{t:"I can look forward. I might be able to look left and right but certainly not backwards.",a:"Sam Zell",topic:"Vision & Long-Term Thinking",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Zell_face_%28cropped%29.jpg/250px-Zell_face_%28cropped%29.jpg"},
+
+// ===== LEADERSHIP =====
+{t:"A real leader doesn't pull or push: he lifts.",a:"",topic:"Leadership"},
+{t:"The role of the leader is to remind people of their common goal.",a:"",topic:"Leadership"},
+{t:"I rather have you be honest with each other than nice to each other.",a:"MrBeast",topic:"Leadership",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/MrBeast_2023_%28cropped%29.jpg/250px-MrBeast_2023_%28cropped%29.jpg"},
+{t:"Two men are laying bricks. You ask one what he is doing: 'I am laying bricks.' The other responds 'I am building a cathedral.' Companies should create their own language.",a:"",topic:"Leadership",meta:"Disney, Apple"},
+{t:"What did you bring me today, results or excuses?",a:"",topic:"Leadership"},
+{t:"Organizations don't become great by believing they are exceptional but by understanding the ways in which they aren't.",a:"Ed Catmull",topic:"Leadership",ep:"https://www.founderspodcast.com/episodes/ed-catmull-317",meta:"Pixar founder",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Ed_Catmull_at_Web_Summit_2015_%28cropped%29.jpg/250px-Ed_Catmull_at_Web_Summit_2015_%28cropped%29.jpg"},
+{t:"The world is often unkind to the new. Creation needs friends.",a:"Ed Catmull",topic:"Leadership",ep:"https://www.founderspodcast.com/episodes/ed-catmull-317",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Ed_Catmull_at_Web_Summit_2015_%28cropped%29.jpg/250px-Ed_Catmull_at_Web_Summit_2015_%28cropped%29.jpg"},
+{t:"No work about work, just work.",a:"Elon Musk",topic:"Leadership",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Elon_Musk_%2854816836217%29_%28cropped_2%29_%28b%29.jpg/250px-Elon_Musk_%2854816836217%29_%28cropped_2%29_%28b%29.jpg"},
+{t:"We help each other. That's why we have civilization.",a:"James S.A. Corey",topic:"Leadership"},
+{t:"Look through all the parks of your cities. You will find no statues of committees.",a:"David Ogilvy",topic:"Leadership",ep:"https://www.founderspodcast.com/episodes/ogilvy-082",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/David_Ogilvy_%28businessman%29.jpg/440px-David_Ogilvy_%28businessman%29.jpg"},
+{t:"Only dead fish go with the flow.",a:"David Ogilvy",topic:"Leadership",ep:"https://www.founderspodcast.com/episodes/ogilvy-082",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/David_Ogilvy_%28businessman%29.jpg/440px-David_Ogilvy_%28businessman%29.jpg"},
+{t:"You only get a spark when the stone and the flint are moving in opposite directions. Don't avoid candor.",a:"David Ogilvy",topic:"Leadership",ep:"https://www.founderspodcast.com/episodes/ogilvy-082",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/David_Ogilvy_%28businessman%29.jpg/440px-David_Ogilvy_%28businessman%29.jpg"},
+{t:"Where do you get your ideas? I don't. They get me.",a:"David Ogilvy",topic:"Leadership",ep:"https://www.founderspodcast.com/episodes/ogilvy-082",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/David_Ogilvy_%28businessman%29.jpg/440px-David_Ogilvy_%28businessman%29.jpg"},
+
+// ===== SELLING & PERSUASION =====
+{t:"I've never worked a day in my life without selling. If I believe in something I sell it and sell it hard.",a:"Estee Lauder",topic:"Selling & Persuasion",ep:"https://www.founderspodcast.com/episodes/estee-lauder-136",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Estee_Lauder_NYWTS.jpg/250px-Estee_Lauder_NYWTS.jpg"},
+{t:"If you shall persuade, appeal to interest not to reason.",a:"Ben Franklin",topic:"Selling & Persuasion",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Joseph_Siffrein_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg/440px-Joseph_Siffrein_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg"},
+{t:"Products that elicit an emotion sell.",a:"Louis B. Mayer",topic:"Selling & Persuasion",meta:"On sound movies",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Louis_B_Mayer_cropped.jpg/250px-Louis_B_Mayer_cropped.jpg"},
+{t:"Sale is proof of utility.",a:"Thomas Edison",topic:"Selling & Persuasion",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Thomas_Edison2.jpg/250px-Thomas_Edison2.jpg"},
+{t:"Every person you meet has an invisible sign hanging from their neck: make me feel important.",a:"Mary Kay Ash",topic:"Selling & Persuasion",meta:"Mary Kay Cosmetics",img:"https://upload.wikimedia.org/wikipedia/en/6/6e/Mary_Kay_Ash.gif"},
+{t:"I am not creating a brand. I am making you a character in a story.",a:"Coco Chanel",topic:"Selling & Persuasion",ep:"https://www.founderspodcast.com/episodes/coco-chanel-064",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Coco_Chanel%2C_1920.jpg/440px-Coco_Chanel%2C_1920.jpg"},
+{t:"Legend is the consecration of fame.",a:"Coco Chanel",topic:"Selling & Persuasion",ep:"https://www.founderspodcast.com/episodes/coco-chanel-064",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Coco_Chanel%2C_1920.jpg/440px-Coco_Chanel%2C_1920.jpg"},
+{t:"At 60mph the loudest noise in the new Rolls Royce is the ticking of the electric clock.",a:"David Ogilvy",topic:"Selling & Persuasion",ep:"https://www.founderspodcast.com/episodes/ogilvy-082",meta:"After reading a 60-page technical manual",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/David_Ogilvy_%28businessman%29.jpg/440px-David_Ogilvy_%28businessman%29.jpg"},
+{t:"Find a way to serve people, then scale how many people you can serve.",a:"Henry Ford",topic:"Selling & Persuasion",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Henry_ford_1919.jpg/440px-Henry_ford_1919.jpg"},
+
+// ===== LEARNING & WISDOM =====
+{t:"Go to school on everybody.",a:"Jeff Bezos",topic:"Learning & Wisdom",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg/440px-Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg"},
+{t:"Learning is not memorizing information. Learning is changing your behavior.",a:"Charlie Munger",topic:"Learning & Wisdom",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Charlie_Munger_%28cropped%29.jpg/250px-Charlie_Munger_%28cropped%29.jpg"},
+{t:"Our competitive advantage is that we learned how to learn.",a:"Gordon Moore",topic:"Learning & Wisdom",meta:"Intel",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Gordon_Moore_1978_%28cropped%29.png/250px-Gordon_Moore_1978_%28cropped%29.png"},
+{t:"The only sustainable advantage is learning faster than your competitors.",a:"Peter Drucker",topic:"Learning & Wisdom",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Drucker5789.jpg/250px-Drucker5789.jpg"},
+{t:"Education builds software for your brain.",a:"Ed Thorp",topic:"Learning & Wisdom",ep:"https://www.founderspodcast.com/episodes/ed-thorp-093",meta:"A Man for All Markets"},
+{t:"Treat the world like a classroom.",a:"",topic:"Learning & Wisdom"},
+{t:"Imitation precedes creation.",a:"Stephen King",topic:"Learning & Wisdom",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Stephen_King_at_the_2024_Toronto_International_Film_Festival_2_%28cropped%29.jpg/250px-Stephen_King_at_the_2024_Toronto_International_Film_Festival_2_%28cropped%29.jpg"},
+{t:"Turn every page.",a:"Robert Caro",topic:"Learning & Wisdom",ep:"https://www.founderspodcast.com/episodes/robert-caro-305",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Robert_caro_2012.jpg/250px-Robert_caro_2012.jpg"},
+{t:"History doesn't repeat but human nature does.",a:"",topic:"Learning & Wisdom"},
+{t:"First principle is don't fool yourself... and you are the easiest one to fool.",a:"Richard Feynman",topic:"Learning & Wisdom",img:"https://upload.wikimedia.org/wikipedia/en/thumb/4/42/Richard_Feynman_Nobel.jpg/250px-Richard_Feynman_Nobel.jpg"},
+{t:"The first step towards wisdom is calling things by their right names.",a:"Chinese Proverb",topic:"Learning & Wisdom"},
+{t:"If I had had more time, I would have sent a shorter letter.",a:"Blaise Pascal",topic:"Learning & Wisdom"},
+{t:"The best way to get what you want is to deserve what you want.",a:"Confucius",topic:"Learning & Wisdom",meta:"Also a Munger favorite"},
+{t:"Somewhere, something incredible is waiting to be known.",a:"Carl Sagan",topic:"Learning & Wisdom",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Carl_Sagan_Planetary_Society.JPG/440px-Carl_Sagan_Planetary_Society.JPG"},
+{t:"Mental models are just a way for you to recall your own knowledge.",a:"",topic:"Learning & Wisdom"},
+{t:"People often do great work later in life not only because they know their field better but because they know themselves better.",a:"",topic:"Learning & Wisdom"},
+{t:"Understanding requires looking at things in 4 ways: as they were, as they are, as they might be and as they ought to be.",a:"",topic:"Learning & Wisdom"},
+{t:"Arrogance is when you believe you can stop learning from others.",a:"Bill Walsh",topic:"Learning & Wisdom",ep:"https://www.founderspodcast.com/episodes/bill-walsh-106",img:"https://upload.wikimedia.org/wikipedia/commons/3/35/Coach_Bill_Walsh.jpg"},
+{t:"Nurture bad ideas: 'if we could only work on these 6 terrible problems, how do we make them work?' It turns the critic instinct into the creative instinct.",a:"Nolan Bushnell",topic:"Learning & Wisdom",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Nolan_Bushnell_2013_%283x4_cropped%29.jpg/250px-Nolan_Bushnell_2013_%283x4_cropped%29.jpg"},
+
+// ===== SIMPLICITY & TASTE =====
+{t:"Taste is a moat. Seek what is best in your field and develop a taste for it.",a:"",topic:"Simplicity & Taste"},
+{t:"What is your product better than?",a:"Jony Ive",topic:"Simplicity & Taste",meta:"The design prompt",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Jonathan_Ive_%28OTRS%29.jpg/250px-Jonathan_Ive_%28OTRS%29.jpg"},
+{t:"Form follows function.",a:"Louis Sullivan / Dieter Rams",topic:"Simplicity & Taste",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Designer-Dieter_Rams.jpg/250px-Designer-Dieter_Rams.jpg"},
+{t:"The power of a model is not its results but the fact that it forces the modeler to define precisely its units and assumptions.",a:"",topic:"Simplicity & Taste"},
+{t:"Statistics are like a bikini: they reveal a lot but conceal the essential.",a:"Aaron Levenstein",topic:"Simplicity & Taste"},
+{t:"Young use so many words for so little thoughts.",a:"Winston Churchill",topic:"Simplicity & Taste",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Sir_Winston_Churchill_-_19086236948_%28restored%29.jpg/250px-Sir_Winston_Churchill_-_19086236948_%28restored%29.jpg"},
+{t:"We think of genius as being complicated but genius has the fewest moving parts. You can always spot the novice because he does too much.",a:"",topic:"Simplicity & Taste"},
+
+// ===== AUTHENTICITY & IDENTITY =====
+{t:"People love authenticity way more than they love perfection.",a:"",topic:"Authenticity & Identity"},
+{t:"Productize yourself: you have uniqueness, product has leverage.",a:"Naval Ravikant",topic:"Authenticity & Identity",img:"https://upload.wikimedia.org/wikipedia/commons/5/55/Naval_Ravikant_%28cropped%29.jpg"},
+{t:"Proud of my heritage yet not defined by it.",a:"",topic:"Authenticity & Identity"},
+{t:"Those on the margins often come to control the center.",a:"",topic:"Authenticity & Identity"},
+{t:"Bad boys move in silence.",a:"Notorious B.I.G.",topic:"Authenticity & Identity"},
+{t:"The American ethos: you don't need to do what your father did. Consistency doesn't matter, only invention matters.",a:"Paul English",topic:"Authenticity & Identity"},
+{t:"The best jobs are neither decreed nor degreed. They are creative expressions of continuous learners and free markets.",a:"Naval Ravikant",topic:"Authenticity & Identity",img:"https://upload.wikimedia.org/wikipedia/commons/5/55/Naval_Ravikant_%28cropped%29.jpg"},
+{t:"7 billion companies.",a:"Naval Ravikant",topic:"Authenticity & Identity",img:"https://upload.wikimedia.org/wikipedia/commons/5/55/Naval_Ravikant_%28cropped%29.jpg"},
+{t:"Capitalism rewards skills that are rare and valuable.",a:"",topic:"Authenticity & Identity"},
+{t:"If you are both a killer and a poet you get rich.",a:"Naval Ravikant",topic:"Authenticity & Identity",img:"https://upload.wikimedia.org/wikipedia/commons/5/55/Naval_Ravikant_%28cropped%29.jpg"},
+{t:"You know you are doing the wrong thing if you are doing it for prestige.",a:"",topic:"Authenticity & Identity"},
+{t:"I want to be a participant rather than a spectator.",a:"Michael Bloomberg",topic:"Authenticity & Identity",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Michael_Bloomberg_2005.jpg/250px-Michael_Bloomberg_2005.jpg"},
+
+// ===== LIFE & VALUES =====
+{t:"Be grateful for the opportunity to give back: you did not invent the language you use, the mathematics you work with or the music that moves you. Put something back in the pool of humanity.",a:"",topic:"Life & Values"},
+{t:"A calm mind, a healthy body and a house full of love. Those things can't be bought.",a:"Naval Ravikant",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/5/55/Naval_Ravikant_%28cropped%29.jpg"},
+{t:"I think of every hour at the gym now as one less day in the hospital in my later years.",a:"Ed Thorp",topic:"Life & Values",ep:"https://www.founderspodcast.com/episodes/ed-thorp-093"},
+{t:"To live content with small means, to seek elegance rather than luxury and refinement rather than fashion, to be worthy not respectable and wealthy, not rich.",a:"Hetty Green",topic:"Life & Values",ep:"https://www.founderspodcast.com/episodes/hetty-green-103",img:"https://upload.wikimedia.org/wikipedia/commons/e/e4/Hetty_Green_cph.3a42973.jpg"},
+{t:"All the money anyone needs is just enough to avoid being a burden on others.",a:"Wright Brothers Sr.",topic:"Life & Values"},
+{t:"Remembering that you are going to die is the best way to avoid the trap of thinking that you have something to lose. You are already naked. There is no reason not to follow your heart.",a:"Steve Jobs",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg/440px-Steve_Jobs_Headshot_2010-CROP_%28cropped_2%29.jpg"},
+{t:"Once your kids are born, you will never look at yourself through your own eyes again but through theirs.",a:"Hans Zimmer",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Hans-Zimmer-profile.jpg/250px-Hans-Zimmer-profile.jpg"},
+{t:"For a life well lived, something will need to be neglected.",a:"Hetty Green",topic:"Life & Values",ep:"https://www.founderspodcast.com/episodes/hetty-green-103",img:"https://upload.wikimedia.org/wikipedia/commons/e/e4/Hetty_Green_cph.3a42973.jpg"},
+{t:"Watch the pennies and the dollars will take care of themselves.",a:"Hetty Green",topic:"Life & Values",ep:"https://www.founderspodcast.com/episodes/hetty-green-103",img:"https://upload.wikimedia.org/wikipedia/commons/e/e4/Hetty_Green_cph.3a42973.jpg"},
+{t:"Art is a conversation between the living and the dead.",a:"",topic:"Life & Values"},
+{t:"The road to success is paved with mistakes well handled.",a:"",topic:"Life & Values"},
+{t:"Things will go wrong and that is an opportunity to show who you really are.",a:"",topic:"Life & Values"},
+{t:"Here the good old days are what is happening.",a:"",topic:"Life & Values",meta:"Town & Country on Marbella Club"},
+{t:"The most successful people are those who leave the game entirely.",a:"Ed Thorp",topic:"Life & Values",ep:"https://www.founderspodcast.com/episodes/ed-thorp-093"},
+{t:"A small leak can sink a big ship.",a:"Ben Franklin",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Joseph_Siffrein_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg/440px-Joseph_Siffrein_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg"},
+{t:"Slow is smooth and smooth is fast.",a:"Navy SEALs",topic:"Life & Values"},
+{t:"JOMO: Joy of missing out.",a:"",topic:"Life & Values"},
+{t:"Resourcefulness. Optimism. Frugality.",a:"",topic:"Life & Values"},
+{t:"The story of America is each generation trying to turn the promise of this country into a reality. A more perfect union.",a:"Barack Obama",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/250px-President_Barack_Obama.jpg"},
+{t:"Justice comes out of recognizing ourselves in each other.",a:"Barack Obama",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/250px-President_Barack_Obama.jpg"},
+{t:"History can't be a sword to justify injustice or a shield against progress. It should be a manual to avoid repeating mistakes.",a:"Barack Obama",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/250px-President_Barack_Obama.jpg"},
+{t:"Knowledge is power. Knowledge shared is power multiplied.",a:"Bob Noyce",topic:"Life & Values",meta:"Intel co-founder",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Robert_Noyce_with_Motherboard_1959.png/250px-Robert_Noyce_with_Motherboard_1959.png"},
+{t:"An invention has some of the characteristics of a poem. A poet derives pleasure from it even if it is never published. But you need to be a poet to understand this.",a:"Vannevar Bush",topic:"Life & Values",ep:"https://www.founderspodcast.com/episodes/vannevar-bush-270"},
+{t:"Play is nature's method of educating a child.",a:"Alexander Graham Bell",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Alexander_Graham_Bell_1895_NPG_77_363.jpg/250px-Alexander_Graham_Bell_1895_NPG_77_363.jpg"},
+{t:"We can't help the weak unless we are strong.",a:"Vannevar Bush",topic:"Life & Values",ep:"https://www.founderspodcast.com/episodes/vannevar-bush-270"},
+{t:"If you are trying to solve a problem created in the modern age, read a modern book. If you are trying to solve an eternal problem, read a book that has survived 2,000 years.",a:"Naval Ravikant",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/5/55/Naval_Ravikant_%28cropped%29.jpg"},
+{t:"What the physical sciences teach the social sciences is how to fail without a sense of guilt.",a:"Edwin Land",topic:"Life & Values",ep:"https://www.founderspodcast.com/episodes/edwin-land-040",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Edwin_H._Land%2C_founder%2C_Polaroid_%28cropped%29.jpg/250px-Edwin_H._Land%2C_founder%2C_Polaroid_%28cropped%29.jpg"},
+{t:"They are earning their failure.",a:"Les Schwab",topic:"Life & Values",ep:"https://www.founderspodcast.com/episodes/les-schwab-105"},
+{t:"The art of being wise is knowing what to overlook.",a:"Jay Pritzker",topic:"Life & Values",meta:"What is the most important thing?",img:"https://upload.wikimedia.org/wikipedia/en/thumb/9/9d/Jay_Pritzker.jpg/250px-Jay_Pritzker.jpg"},
+{t:"In a gold rush, sell picks and shovels.",a:"Howard Hughes Sr.",topic:"Life & Values",ep:"https://www.founderspodcast.com/episodes/howard-hughes-059",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Howard_Hughes_1938.jpg/250px-Howard_Hughes_1938.jpg"},
+{t:"We are not rational creatures. We are rationalizing creatures.",a:"",topic:"Life & Values"},
+{t:"Excelsior! Upwards and onwards.",a:"",topic:"Life & Values"},
+{t:"When he walks into a room, it feels like the future arrives.",a:"",topic:"Life & Values",meta:"On Charleston pastor"},
+{t:"Successful people listen.",a:"Michael Jordan",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Michael_Jordan_in_2014.jpg/250px-Michael_Jordan_in_2014.jpg"},
+{t:"There is a difference between self-help and self-improvement.",a:"",topic:"Life & Values"},
+{t:"Across the South we have a deep appreciation of history. We just have not always had a deep appreciation of each other's history.",a:"Barack Obama",topic:"Life & Values",meta:"Charleston eulogy",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/250px-President_Barack_Obama.jpg"},
+{t:"Today the past is ever less predictive, the future less predictable and the present barely exists at all. Everything is accelerating change.",a:"Dee Hock",topic:"Life & Values",meta:"Visa founder",img:"https://upload.wikimedia.org/wikipedia/en/a/a8/Dee_Hock_%282018%29.jpg"},
+{t:"Evolution only happens under stress.",a:"",topic:"Life & Values"},
+{t:"Perfection = complexity resolved, not ignored.",a:"",topic:"Life & Values"},
+{t:"Brother, we are collaborators. You gave me the scaffolding to build what I needed.",a:"Barack Obama",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/250px-President_Barack_Obama.jpg"},
+{t:"That is a truism doesn't mean it is untrue.",a:"Truman Capote",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Truman_Capote_by_Jack_Mitchell.jpg/250px-Truman_Capote_by_Jack_Mitchell.jpg"},
+{t:"Do you know the French president? I only know one French name: Christian Dior.",a:"",topic:"Life & Values",meta:"Cab driver to Arnault"},
+{t:"Here is the secret of the world: save it and it will thank you every day.",a:"",topic:"Life & Values"},
+{t:"Never underestimate anyone, what's the point? Assume they are a secret genius.",a:"",topic:"Life & Values"},
+{t:"America is a mix of opportunity and acceptance.",a:"Scott Galloway",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Scott_Galloway_%2851933097365%29_%28cropped%29.jpg/250px-Scott_Galloway_%2851933097365%29_%28cropped%29.jpg"},
+{t:"Most people dislike vanity in others. I try to give it fair quarter as it often leads to great things.",a:"Ben Franklin",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Joseph_Siffrein_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg/440px-Joseph_Siffrein_Duplessis_-_Benjamin_Franklin_-_Google_Art_Project.jpg"},
+{t:"If you have had a great insight, let it dominate everything as you are unlikely to get another one like that.",a:"",topic:"Life & Values"},
+{t:"When you are used to privilege, equality feels like oppression.",a:"",topic:"Life & Values"},
+{t:"There are times in your life when you find out who your friends are.",a:"Warren Ellis",topic:"Life & Values",meta:"On John Cassidy, from Planetary",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Warren_Ellis_by_Gage_Skidmore.jpg/250px-Warren_Ellis_by_Gage_Skidmore.jpg"},
+{t:"Predictable labels attached to unpredictable stories.",a:"",topic:"Life & Values",meta:"On Onassis"},
+{t:"The worst thing about psychopathic people is that, in order to stop them, you have to become like them. Run away.",a:"",topic:"Life & Values"},
+{t:"Europeans drive manual, Americans drive automatic.",a:"",topic:"Life & Values"},
+{t:"I spent a lot of time trying to relate the past to the present.",a:"",topic:"Life & Values"},
+{t:"There are only 2 things impossible to stare at for too long: the sun and your own soul.",a:"La Rochefoucauld",topic:"Life & Values",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Fran%C3%A7ois_de_La_Rochefoucauld.jpg/250px-Fran%C3%A7ois_de_La_Rochefoucauld.jpg"},
+{t:"Spirituality = rigorous introspection.",a:"",topic:"Life & Values"},
+];
+
+const ICONS={"Excellence & Standards":"\u2B50","Vision & Long-Term Thinking":"\uD83D\uDD2D","Entrepreneurship & Founders":"\uD83D\uDE80","Mindset & Character":"\uD83E\uDDE0","Learning & Wisdom":"\uD83D\uDCDA","Strategy & Competition":"\u265F\uFE0F","Selling & Persuasion":"\uD83C\uDFAF","Investing & Business":"\uD83D\uDCB0","Hiring & Talent":"\uD83D\uDC65","Authenticity & Identity":"\uD83C\uDFAD","Leadership":"\uD83D\uDCA1","Simplicity & Taste":"\u2728","Life & Values":"\uD83C\uDF1F"};
+const ORDER=["Excellence & Standards","Mindset & Character","Entrepreneurship & Founders","Strategy & Competition","Investing & Business","Hiring & Talent","Vision & Long-Term Thinking","Leadership","Selling & Persuasion","Learning & Wisdom","Simplicity & Taste","Authenticity & Identity","Life & Values"];
+let cv='topic',st='';
+function gi(n){if(!n)return'?';return n.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()}
+function av(q){const u=IMGS[q.a];if(u)return`<div class="avatar"><img src="${u}" alt="${q.a}" loading="lazy"></div>`;return`<div class="avatar-initials">${gi(q.a)}</div>`;}
+function src(q){let p=[];if(q.meta)p.push(q.meta);if(q.ep)p.push(`<a href="${q.ep}" target="_blank">Founders Podcast</a>`);return p.length?`<div class="quote-source">${p.join(' \u00B7 ')}</div>`:'';}
+
+function rtv(f){const c=document.getElementById('content');let h='';for(const t of ORDER){const qs=f.filter(q=>q.topic===t);if(!qs.length)continue;h+=`<div class="topic-section"><div class="topic-header"><span class="topic-icon">${ICONS[t]||''}</span>${t}</div><div class="quote-grid">`;for(const q of qs){h+=`<div class="quote-card"><div class="quote-text">${q.t}</div>`;if(q.a){h+=`<div class="quote-footer">${av(q)}<div><div class="quote-author">${q.a}</div>${src(q)}</div></div>`;}else{h+=src(q);}h+=`</div>`;}h+=`</div></div>`;}if(!h)h='<div class="no-results">No quotes match your search.</div>';c.innerHTML=h;}
+
+function rfv(f){const c=document.getElementById('content');const g={},na=[];for(const q of f){if(!q.a){na.push(q);continue;}if(!g[q.a])g[q.a]=[];g[q.a].push(q);}const s=Object.entries(g).sort((a,b)=>b[1].length-a[1].length);let h='';for(const[a,qs]of s){const sm=qs[0];h+=`<div class="founder-section"><div class="founder-header">`;{const u=IMGS[a];if(u){h+=`<div class="founder-avatar"><img src="${u}" alt="${a}" loading="lazy"></div>`;}else{h+=`<div class="founder-avatar"><span class="founder-avatar-initials">${gi(a)}</span></div>`;}}const ep=sm.ep?` \u00B7 <a href="${sm.ep}" target="_blank">Founders Podcast</a>`:'';const mt=sm.meta?` \u00B7 ${sm.meta}`:'';h+=`<div class="founder-info"><h3>${a}</h3><div class="founder-meta">${qs.length} quote${qs.length>1?'s':''}${mt}${ep}</div></div></div><div class="founder-quotes-list">`;for(const q of qs){h+=`<div class="founder-quote-item">${q.t}<div class="topic-tag">${q.topic}</div></div>`;}h+=`</div></div>`;}if(na.length){h+=`<div class="founder-section"><div class="founder-header"><div class="founder-avatar"><span class="founder-avatar-initials">?</span></div><div class="founder-info"><h3>Unattributed</h3><div class="founder-meta">${na.length} quotes</div></div></div><div class="founder-quotes-list">`;for(const q of na){h+=`<div class="founder-quote-item">${q.t}<div class="topic-tag">${q.topic}</div></div>`;}h+=`</div></div>`;}if(!h)h='<div class="no-results">No quotes match your search.</div>';c.innerHTML=h;}
+
+function gf(){if(!st)return Q;const s=st.toLowerCase();return Q.filter(q=>q.t.toLowerCase().includes(s)||(q.a&&q.a.toLowerCase().includes(s))||q.topic.toLowerCase().includes(s)||(q.meta&&q.meta.toLowerCase().includes(s)));}
+function render(){const f=gf();if(cv==='topic')rtv(f);else rfv(f);}
+function switchView(v){cv=v;document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===v));render();}
+function filterQuotes(v){st=v.trim();render();}
+function ac(el,t){let c=0;const s=Math.max(1,Math.floor(t/25));const i=setInterval(()=>{c+=s;if(c>=t){c=t;clearInterval(i);}el.textContent=c;},25);}
+document.addEventListener('DOMContentLoaded',()=>{render();ac(document.getElementById('qC'),Q.length);ac(document.getElementById('fC'),[...new Set(Q.filter(q=>q.a).map(q=>q.a))].length);ac(document.getElementById('tC'),[...new Set(Q.map(q=>q.topic))].length);});
+</script>
+</body>
+</html>
